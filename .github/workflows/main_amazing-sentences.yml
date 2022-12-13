@@ -26,12 +26,14 @@ jobs:
         username: ${{ secrets.AzureAppService_ContainerUsername_64ecdce048654bebaecebf4d3d41c4c5 }}
         password: ${{ secrets.AzureAppService_ContainerPassword_e0e31cadfd7f4b5a93a0be483bd95de7 }}
 
-    - name: Build and push container image to registry
-      uses: docker/build-push-action@v2
-      with:
-        push: true
-        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_64ecdce048654bebaecebf4d3d41c4c5 }}/amazing-sentences:${{ github.sha }}
-        file: ./Dockerfile
+    - name: Install application dependencies
+      run: docker run --rm -u "$(id -u):$(id -g)" -v "$(pwd):/var/www/html" -w /var/www/html laravelsail/php81-composer:latest composer install --ignore-platform-reqs
+
+    - name: Build container image
+      run: ./vendor/bin/sail build
+
+    - name: Push container image to registry
+      run: docker push index.docker.io/${{ secrets.AzureAppService_ContainerUsername_64ecdce048654bebaecebf4d3d41c4c5 }}/amazing-sentences:${{ github.sha }}
 
   deploy:
     runs-on: ubuntu-latest
