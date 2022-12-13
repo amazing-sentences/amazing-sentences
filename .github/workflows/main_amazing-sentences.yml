@@ -32,6 +32,9 @@ jobs:
     - name: Build container image
       run: ./vendor/bin/sail build
 
+    - name: Tag container image
+      run: docker tag ${{ secrets.AzureAppService_ContainerUsername_64ecdce048654bebaecebf4d3d41c4c5 }}/amazing-sentences:latest index.docker.io/${{ secrets.AzureAppService_ContainerUsername_64ecdce048654bebaecebf4d3d41c4c5 }}/amazing-sentences:${{ github.sha }}
+
     - name: Push container image to registry
       run: docker push index.docker.io/${{ secrets.AzureAppService_ContainerUsername_64ecdce048654bebaecebf4d3d41c4c5 }}/amazing-sentences:${{ github.sha }}
 
