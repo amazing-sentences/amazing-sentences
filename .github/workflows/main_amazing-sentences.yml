@@ -27,7 +27,7 @@ jobs:
         password: ${{ secrets.AzureAppService_ContainerPassword_e0e31cadfd7f4b5a93a0be483bd95de7 }}
 
     - name: Build container image
-      run: export SAIL_FILES=docker-compose.production.yml && ./vendor/bin/sail build
+      run: docker-compose -f docker-compose.production.yml build
 
     - name: Tag container image
       run: docker tag ${{ secrets.AzureAppService_ContainerUsername_64ecdce048654bebaecebf4d3d41c4c5 }}/amazing-sentences:latest index.docker.io/${{ secrets.AzureAppService_ContainerUsername_64ecdce048654bebaecebf4d3d41c4c5 }}/amazing-sentences:${{ github.sha }}
