@@ -2,7 +2,7 @@ FROM ubuntu:22.04
 
 LABEL maintainer="Jorge Juan Rodríguez Manzano"
 
-ARG WWWGROUP
+ARG WWWGROUP=www-data
 ARG NODE_VERSION=16
 ARG NODE_ENV=production
 ARG POSTGRES_VERSION=14
@@ -12,6 +12,7 @@ WORKDIR /var/www/html
 ENV DEBIAN_FRONTEND noninteractive
 ENV NODE_ENV $NODE_ENV
 ENV TZ=UTC
+ENV APP_ENV=production
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
@@ -52,18 +53,27 @@ RUN apt-get update \
 
 RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.1
 
-RUN groupadd --force -g $WWWGROUP sail
-RUN useradd -ms /bin/bash --no-user-group -g $WWWGROUP -u 1337 sail
+RUN useradd -g $WWWGROUP sail
+RUN chown -R sail:$WWWGROUP .
 
-COPY docker/8.1/start-container /usr/local/bin/start-container
-COPY docker/8.1/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/8.1/start-container.production /usr/local/bin/start-container.production
+COPY docker/8.1/supervisord.conf.production /etc/supervisor/conf.d/supervisord.conf
 COPY docker/8.1/php.ini /etc/php/8.1/cli/conf.d/99-sail.ini
-RUN chmod +x /usr/local/bin/start-container
+RUN chmod +x /usr/local/bin/start-container.production
+
+RUN mkdir /.composer
+RUN chmod -R ugo+rw /.composer
+RUN chown -R sail:$WWWGROUP /.composer
+RUN chown sail:$WWWGROUP /usr/local/bin/start-container.production
+RUN chmod -R o+rw /var/log/supervisor
+RUN chmod -R o+rw /var/run
 
 # Laravel project files are made available to Sail local containers using a
 # volume that places the project root contents into /var/www/html.
 # This Dockerfile is intended to be run on a CI pipeline, so contents need
 # to be manually copied over.
+USER sail
+
 COPY package.json package-lock.json ./
 RUN npm ci && npm cache clean --force
 
@@ -76,7 +86,7 @@ COPY public public/
 COPY resources resources/
 COPY routes routes/
 COPY storage storage/
-COPY vite.config.js ./
+COPY vite.config.js .env.production.encrypted ./
 
 COPY composer.json composer.lock artisan ./
 RUN composer install --no-dev --no-progress --no-interaction --optimize-autoloader
@@ -84,4 +94,4 @@ RUN composer install --no-dev --no-progress --no-interaction --optimize-autoload
 
 EXPOSE 8000
 
-ENTRYPOINT ["start-container"]
+ENTRYPOINT ["start-container.production"]

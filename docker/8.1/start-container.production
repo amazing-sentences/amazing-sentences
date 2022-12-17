@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+php /var/www/html/artisan env:decrypt --env=production --force
+
+if [ $# -gt 0 ]; then
+    exec gosu $WWWUSER "$@"
+else
+    exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+fi
