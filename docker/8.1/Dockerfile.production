@@ -64,6 +64,8 @@ RUN chmod +x /usr/local/bin/start-container.production
 RUN mkdir /.composer
 RUN chmod -R ugo+rw /.composer
 RUN chown -R sail:$WWWGROUP /.composer
+RUN mkdir /home/sail
+RUN chown -R sail:$WWWGROUP /home/sail
 RUN chown sail:$WWWGROUP /usr/local/bin/start-container.production
 RUN chmod -R o+rw /var/log/supervisor
 RUN chmod -R o+rw /var/run
