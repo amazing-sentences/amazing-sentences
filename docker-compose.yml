@@ -37,6 +37,8 @@ services:
             - '.:/var/www/html'
         networks:
             - sail
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
         depends_on:
             - pgsql
             - redis
