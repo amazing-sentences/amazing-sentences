@@ -92,6 +92,8 @@ COPY vite.config.js .env.production.encrypted ./
 
 COPY composer.json composer.lock artisan ./
 RUN composer install --no-dev --no-progress --no-interaction --optimize-autoloader
+
+RUN chown -R sail:$WWWGROUP /var/www/html
 # End of manual copy for Laravel project files.
 
 EXPOSE 8000
