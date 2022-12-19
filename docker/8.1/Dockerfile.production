@@ -53,8 +53,8 @@ RUN apt-get update \
 
 RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.1
 
-RUN useradd -g $WWWGROUP sail
-RUN chown -R sail:$WWWGROUP .
+# Container startup requirements
+RUN useradd -g $WWWGROUP -u 1337 sail
 
 COPY docker/8.1/start-container.production /usr/local/bin/start-container.production
 COPY docker/8.1/supervisord.conf.production /etc/supervisor/conf.d/supervisord.conf
@@ -66,19 +66,17 @@ RUN chmod -R ugo+rw /.composer
 RUN chown -R sail:$WWWGROUP /.composer
 RUN mkdir /home/sail
 RUN chown -R sail:$WWWGROUP /home/sail
-RUN chown -R sail:$WWWGROUP /var/www/html
 RUN chown sail:$WWWGROUP /usr/local/bin/start-container.production
 RUN chmod -R o+rw /var/log/supervisor
 RUN chmod -R o+rw /var/run
+# End of Container startup requirements
 
 # Laravel project files are made available to Sail local containers using a
 # volume that places the project root contents into /var/www/html.
 # This Dockerfile is intended to be run on a CI pipeline, so contents need
 # to be manually copied over.
-USER sail
-
+COPY composer.json composer.lock artisan ./
 COPY package.json package-lock.json ./
-RUN npm ci
 
 COPY app app/
 COPY bootstrap bootstrap/
@@ -91,15 +89,18 @@ COPY routes routes/
 COPY storage storage/
 COPY vite.config.js .env.production.encrypted ./
 
-COPY composer.json composer.lock artisan ./
+RUN chown -R sail:$WWWGROUP /var/www/html
+# End of manual copy for Laravel project files.
 
-RUN composer install --no-dev --no-progress --no-interaction
+# Dependencies
+USER sail
+RUN composer install --no-dev --no-progress --no-interaction --optimize-autoloader
+RUN npm ci
+
+# Production optimizations
 RUN php artisan optimize:clear
-RUN composer install --optimize-autoloader
-RUN php artisan config:cache
 RUN php artisan route:cache
 RUN php artisan view:cache
-# End of manual copy for Laravel project files.
 
 EXPOSE 8000
 

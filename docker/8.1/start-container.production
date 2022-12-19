@@ -6,6 +6,8 @@ fi
 
 php /var/www/html/artisan env:decrypt --env=production --force
 
+php artisan config:cache
+
 if [ $# -gt 0 ]; then
     exec gosu $WWWUSER "$@"
 else
