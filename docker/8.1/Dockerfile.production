@@ -95,8 +95,10 @@ COPY composer.json composer.lock artisan ./
 
 RUN composer install --no-dev --no-progress --no-interaction
 RUN php artisan optimize:clear
-RUN php artisan config:cache
 RUN composer install --optimize-autoloader
+RUN php artisan config:cache
+RUN php artisan route:cache
+RUN php artisan view:cache
 # End of manual copy for Laravel project files.
 
 EXPOSE 8000
