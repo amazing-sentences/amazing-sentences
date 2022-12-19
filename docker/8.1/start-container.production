@@ -1,15 +1,9 @@
 #!/usr/bin/env bash
 
-if [ ! -z "$WWWUSER" ]; then
-    usermod -u $WWWUSER sail
+if [ ! -f /var/www/html/.env.production ]; then
+    php /var/www/html/artisan env:decrypt --env=production --force
 fi
-
-php /var/www/html/artisan env:decrypt --env=production --force
 
 php artisan config:cache
 
-if [ $# -gt 0 ]; then
-    exec gosu $WWWUSER "$@"
-else
-    exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
-fi
+exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
