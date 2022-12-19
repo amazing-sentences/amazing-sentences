@@ -66,6 +66,7 @@ RUN chmod -R ugo+rw /.composer
 RUN chown -R sail:$WWWGROUP /.composer
 RUN mkdir /home/sail
 RUN chown -R sail:$WWWGROUP /home/sail
+RUN chown -R sail:$WWWGROUP /var/www/html
 RUN chown sail:$WWWGROUP /usr/local/bin/start-container.production
 RUN chmod -R o+rw /var/log/supervisor
 RUN chmod -R o+rw /var/run
@@ -77,7 +78,7 @@ RUN chmod -R o+rw /var/run
 USER sail
 
 COPY package.json package-lock.json ./
-RUN npm ci && npm cache clean --force
+RUN npm ci
 
 COPY app app/
 COPY bootstrap bootstrap/
@@ -92,8 +93,6 @@ COPY vite.config.js .env.production.encrypted ./
 
 COPY composer.json composer.lock artisan ./
 RUN composer install --no-dev --no-progress --no-interaction --optimize-autoloader
-
-RUN chown -R sail:$WWWGROUP /var/www/html
 # End of manual copy for Laravel project files.
 
 EXPOSE 8000

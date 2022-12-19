@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+if [ ! -z "$WWWUSER" ]; then
+    usermod -u $WWWUSER sail
+fi
+
 php /var/www/html/artisan env:decrypt --env=production --force
 
 if [ $# -gt 0 ]; then
