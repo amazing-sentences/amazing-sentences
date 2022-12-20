@@ -2,7 +2,6 @@ FROM ubuntu:22.04
 
 LABEL maintainer="Jorge Juan Rodríguez Manzano"
 
-ARG WWWGROUP=www-data
 ARG NODE_VERSION=16
 ARG NODE_ENV=production
 ARG POSTGRES_VERSION=14
@@ -54,7 +53,7 @@ RUN apt-get update \
 RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.1
 
 # Container startup requirements
-RUN useradd -g $WWWGROUP -u 1337 sail
+RUN useradd -g www-data -u 1337 sail
 
 COPY docker/8.1/start-container.production /usr/local/bin/start-container.production
 COPY docker/8.1/supervisord.conf.production /etc/supervisor/conf.d/supervisord.conf
@@ -63,10 +62,10 @@ RUN chmod +x /usr/local/bin/start-container.production
 
 RUN mkdir /.composer
 RUN chmod -R ugo+rw /.composer
-RUN chown -R sail:$WWWGROUP /.composer
+RUN chown -R sail:www-data /.composer
 RUN mkdir /home/sail
-RUN chown -R sail:$WWWGROUP /home/sail
-RUN chown sail:$WWWGROUP /usr/local/bin/start-container.production
+RUN chown -R sail:www-data /home/sail
+RUN chown sail:www-data /usr/local/bin/start-container.production
 RUN chmod -R o+rw /var/log/supervisor
 RUN chmod -R o+rw /var/run
 # End of Container startup requirements
@@ -89,19 +88,13 @@ COPY routes routes/
 COPY storage storage/
 COPY vite.config.js .env.production.encrypted ./
 
-RUN chown -R sail:$WWWGROUP /var/www/html
+RUN chown -R sail:www-data /var/www/html
 # End of manual copy for Laravel project files.
 
 # Dependencies
 USER sail
 RUN composer install --no-dev --no-progress --no-interaction --optimize-autoloader
 RUN npm ci
-
-# Production optimizations
-RUN php artisan optimize:clear
-RUN php artisan route:cache
-RUN php artisan view:cache
-RUN php artisan storage:link
 
 EXPOSE 8000
 
