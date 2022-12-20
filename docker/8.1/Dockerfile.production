@@ -101,6 +101,7 @@ RUN npm ci
 RUN php artisan optimize:clear
 RUN php artisan route:cache
 RUN php artisan view:cache
+RUN php artisan storage:link
 
 EXPOSE 8000
 
