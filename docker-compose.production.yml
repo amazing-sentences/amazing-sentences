@@ -7,11 +7,8 @@ services:
         image: jjrmanzano/amazing-sentences-nginx:latest
         ports:
             - '${APP_PORT:-80}:80'
-            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
         volumes:
-            - 'amazing-sentences-www:/var/www/html'
+            - 'var-www-html-production:/var/www/html'
         networks:
             - sail
         healthcheck:
@@ -28,15 +25,14 @@ services:
         image: jjrmanzano/amazing-sentences-laravel:latest
         ports:
             - '8000:8000'
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
+            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
         environment:
             WWWUSER: '${WWWUSER:-sail}'
             LARAVEL_SAIL: 1
             XDEBUG_MODE: 'off'
             LARAVEL_ENV_ENCRYPTION_KEY: '${LARAVEL_ENV_ENCRYPTION_KEY:-}'
         volumes:
-            - 'amazing-sentences-www:/var/www/html'
+            - 'var-www-html-production:/var/www/html'
         networks:
             - sail
         depends_on:
@@ -54,7 +50,7 @@ services:
             POSTGRES_USER: '${DB_USERNAME}'
             POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
         volumes:
-            - 'sail-pgsql:/var/lib/postgresql/data'
+            - 'sail-pgsql-production:/var/lib/postgresql/data'
         networks:
             - sail
         healthcheck:
@@ -66,7 +62,7 @@ services:
         ports:
             - '${FORWARD_REDIS_PORT:-6379}:6379'
         volumes:
-            - 'sail-redis:/data'
+            - 'sail-redis-production:/data'
         networks:
             - sail
         healthcheck:
@@ -78,7 +74,7 @@ services:
         ports:
             - '${FORWARD_MEILISEARCH_PORT:-7700}:7700'
         volumes:
-            - 'sail-meilisearch:/meili_data'
+            - 'sail-meilisearch-production:/meili_data'
         networks:
             - sail
         healthcheck:
@@ -96,11 +92,11 @@ networks:
     sail:
         driver: bridge
 volumes:
-    amazing-sentences-www:
+    var-www-html-production:
         driver: local
-    sail-pgsql:
+    sail-pgsql-production:
         driver: local
-    sail-redis:
+    sail-redis-production:
         driver: local
-    sail-meilisearch:
+    sail-meilisearch-production:
         driver: local
