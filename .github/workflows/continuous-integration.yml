@@ -26,6 +26,9 @@ jobs:
     - name: Start application
       run: docker compose -f docker-compose.testing.yml up --wait
 
+    - name: Change directory into application files
+      run: cd /var/www/html
+
     - name: Linter
       run: ./vendor/bin/pint --test
 
