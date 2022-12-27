@@ -26,14 +26,11 @@ jobs:
     - name: Start application
       run: docker compose -f docker-compose.testing.yml up --wait
 
-    - name: Change directory into application files
-      run: cd /var/www/html
-
     - name: Linter
-      run: vendor/bin/pint --test
+      run: docker exec amazing-sentences-laravel-1 sh -c "./vendor/bin/pint --test"
 
     - name: Tests
-      run: php artisan test --parallel --coverage --min=50.0
+      run: docker exec amazing-sentences-laravel-1 sh -c "php artisan test --parallel --coverage --min=50"
 
   continous-delivery:
     needs: build-and-test
