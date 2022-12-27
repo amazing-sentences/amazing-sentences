@@ -30,7 +30,7 @@ jobs:
       run: docker exec amazing-sentences-laravel-1 sh -c "./vendor/bin/pint --test"
 
     - name: Tests
-      run: docker exec amazing-sentences-laravel-1 sh -c "php artisan test --parallel --coverage --min=50"
+      run: docker exec amazing-sentences-laravel-1 sh -c "php artisan test --parallel --coverage"
 
   continous-delivery:
     needs: build-and-test
