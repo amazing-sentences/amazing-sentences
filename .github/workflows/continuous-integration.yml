@@ -1,0 +1,11 @@
+name: Continous Integration - Build and Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  continous-delivery:
+    uses: ./.github/workflows/continuous-delivery.yml
+    secrets: inherit
