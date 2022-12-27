@@ -30,7 +30,7 @@ jobs:
       run: cd /var/www/html
 
     - name: Linter
-      run: ./vendor/bin/pint --test
+      run: vendor/bin/pint --test
 
     - name: Tests
       run: php artisan test --parallel --coverage --min=50.0
