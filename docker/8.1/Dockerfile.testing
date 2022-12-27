@@ -87,7 +87,7 @@ COPY resources resources/
 COPY routes routes/
 COPY storage storage/
 COPY tests tests/
-COPY vite.config.js .env.testing phpunit.xml .
+COPY vite.config.js .env.testing phpunit.xml ./
 
 RUN chown -R sail:www-data /var/www/html
 # End of manual copy for Laravel project files.
