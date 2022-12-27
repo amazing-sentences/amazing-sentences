@@ -30,7 +30,6 @@ services:
             WWWUSER: '${WWWUSER:-sail}'
             LARAVEL_SAIL: 1
             XDEBUG_MODE: 'coverage'
-            LARAVEL_ENV_ENCRYPTION_KEY: '${LARAVEL_ENV_ENCRYPTION_KEY:-}'
         volumes:
             - 'var-www-html-testing:/var/www/html'
         networks:
@@ -46,15 +45,15 @@ services:
             - '${FORWARD_DB_PORT:-5432}:5432'
         environment:
             PGPASSWORD: '${DB_PASSWORD:-secret}'
-            POSTGRES_DB: '${DB_DATABASE}'
-            POSTGRES_USER: '${DB_USERNAME}'
+            POSTGRES_DB: '${DB_DATABASE:-testing}'
+            POSTGRES_USER: '${DB_USERNAME:-sail}'
             POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
         volumes:
             - 'sail-pgsql-testing:/var/lib/postgresql/data'
         networks:
             - sail
         healthcheck:
-            test: ["CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}"]
+            test: ["CMD", "pg_isready", "-q", "-d", "${DB_DATABASE:-testing}", "-U", "${DB_USERNAME:-sail}"]
             retries: 3
             timeout: 5s
     redis:
