@@ -2,13 +2,11 @@ version: '3'
 services:
     nginx:
         build:
-            context: ./docker/nginx
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./docker/nginx/Dockerfile
         image: jjrmanzano/amazing-sentences-nginx:latest
         ports:
             - '${APP_PORT:-80}:80'
-        volumes:
-            - 'var-www-html-production:/var/www/html'
         networks:
             - sail
         healthcheck:
@@ -32,7 +30,7 @@ services:
             XDEBUG_MODE: 'off'
             LARAVEL_ENV_ENCRYPTION_KEY: '${LARAVEL_ENV_ENCRYPTION_KEY:-}'
         volumes:
-            - 'var-www-html-production:/var/www/html'
+            - 'laravel-logs-production:/var/www/html/storage/logs'
         networks:
             - sail
         depends_on:
@@ -45,16 +43,16 @@ services:
         ports:
             - '${FORWARD_DB_PORT:-5432}:5432'
         environment:
-            PGPASSWORD: '${DB_PASSWORD:-secret}'
-            POSTGRES_DB: '${DB_DATABASE}'
-            POSTGRES_USER: '${DB_USERNAME}'
-            POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+            PGPASSWORD: '${DB_PASSWORD:-password}'
+            POSTGRES_DB: '${DB_DATABASE:-amazing_sentences}'
+            POSTGRES_USER: '${DB_USERNAME:-sail}'
+            POSTGRES_PASSWORD: '${DB_PASSWORD:-password}'
         volumes:
             - 'sail-pgsql-production:/var/lib/postgresql/data'
         networks:
             - sail
         healthcheck:
-            test: ["CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}"]
+            test: ["CMD", "pg_isready", "-q", "-d", "${DB_DATABASE:-amazing_sentences}", "-U", "${DB_USERNAME:-sail}"]
             retries: 3
             timeout: 5s
     redis:
@@ -96,7 +94,7 @@ networks:
     sail:
         driver: bridge
 volumes:
-    var-www-html-production:
+    laravel-logs-production:
         driver: local
     sail-pgsql-production:
         driver: local

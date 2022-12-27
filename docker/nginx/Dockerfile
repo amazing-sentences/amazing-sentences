@@ -2,7 +2,7 @@ FROM nginx:alpine
 
 LABEL maintainer="Jorge Juan Rodríguez Manzano"
 
-COPY nginx.conf /etc/nginx/
+COPY docker/nginx/nginx.conf /etc/nginx/
 
 # If you're in China, or you need to change sources, will be set CHANGE_SOURCE to true in .env.
 
@@ -31,15 +31,18 @@ ARG PHP_UPSTREAM_PORT=9000
 RUN touch /var/log/messages
 
 # Copy 'logrotate' config file
-COPY logrotate/nginx /etc/logrotate.d/
+COPY docker/nginx/logrotate/nginx /etc/logrotate.d/
 
 # Remove the default conf
 RUN rm /etc/nginx/conf.d/default.conf
 
 # Enable Laravel Octane
-COPY sites/octane.conf /etc/nginx/sites-available/
+COPY docker/nginx/sites/octane.conf /etc/nginx/sites-available/
 
-ADD startup.sh /opt/startup.sh
+# Copy static assets from public folder
+COPY public /var/www/html/public/
+
+ADD docker/nginx/startup.sh /opt/startup.sh
 RUN sed -i 's/\r//g' /opt/startup.sh
 CMD ["/bin/bash", "/opt/startup.sh"]
 

@@ -3,13 +3,11 @@ version: '3'
 services:
     nginx:
         build:
-            context: ./docker/nginx
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./docker/nginx/Dockerfile
         image: jjrmanzano/amazing-sentences-nginx:local
         ports:
             - '${APP_PORT:-80}:80'
-        volumes:
-            - '.:/var/www/html'
         networks:
             - sail
         healthcheck:
