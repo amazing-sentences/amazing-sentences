@@ -22,7 +22,7 @@ jobs:
         password: ${{ secrets.AzureAppService_ContainerPassword_e0e31cadfd7f4b5a93a0be483bd95de7 }}
 
     - name: Build optimized bundle for production
-      run: docker-compose -f docker-compose.production.yml build
+      run: docker compose -f docker-compose.production.yml build
 
     - name: Tag and Push nginx:latest
       run: docker push index.docker.io/${{ secrets.AzureAppService_ContainerUsername_64ecdce048654bebaecebf4d3d41c4c5 }}/amazing-sentences-nginx:latest

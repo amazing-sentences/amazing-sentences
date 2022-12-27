@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-test:
     runs-on: 'ubuntu-latest'
 
     steps:
@@ -24,7 +24,7 @@ jobs:
         password: ${{ secrets.AzureAppService_ContainerPassword_e0e31cadfd7f4b5a93a0be483bd95de7 }}
 
     - name: Start application
-      run: docker-compose -f docker-compose.testing.yml up
+      run: docker compose -f docker-compose.testing.yml up --wait
 
     - name: Linter
       run: ./vendor/bin/pint --test
@@ -33,5 +33,6 @@ jobs:
       run: php artisan test --parallel --coverage --min=50.0
 
   continous-delivery:
+    needs: build-and-test
     uses: ./.github/workflows/continuous-delivery.yml
     secrets: inherit
