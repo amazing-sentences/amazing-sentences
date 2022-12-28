@@ -18,8 +18,6 @@ services:
         build:
             context: .
             dockerfile: ./docker/8.1/Dockerfile.production
-            args:
-                WWWGROUP: '${WWWGROUP:-www-data}'
         image: jjrmanzano/amazing-sentences-laravel:latest
         ports:
             - '8000:8000'
