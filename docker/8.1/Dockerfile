@@ -50,6 +50,7 @@ RUN apk update \
 
 RUN setcap "cap_net_bind_service=+ep" /usr/bin/php81
 
+# Container startup requirements
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY php.ini /etc/php81/conf.d/99-sail.ini
 
@@ -61,6 +62,7 @@ RUN adduser --gecos "Sail" --ingroup www-data --disabled-password --shell /bin/b
 RUN mkdir -p /var/log/supervisor && chmod -R o+rw /var/log/supervisor
 RUN mkdir -p /var/run && chmod -R o+rw /var/run
 RUN mkdir /.composer && chmod -R ugo+rw /.composer
+# End of Container startup requirements
 
 USER sail
 

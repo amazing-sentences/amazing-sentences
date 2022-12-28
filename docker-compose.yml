@@ -19,8 +19,6 @@ services:
         build:
             context: ./docker/8.1
             dockerfile: Dockerfile
-            args:
-                WWWGROUP: '${WWWGROUP}'
         image: jjrmanzano/amazing-sentences-laravel:local
         ports:
             - '8000:8000'

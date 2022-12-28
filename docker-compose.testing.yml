@@ -18,8 +18,6 @@ services:
         build:
             context: .
             dockerfile: ./docker/8.1/Dockerfile.testing
-            args:
-                WWWGROUP: '${WWWGROUP:-www-data}'
         image: jjrmanzano/amazing-sentences-laravel:testing
         ports:
             - '8000:8000'
