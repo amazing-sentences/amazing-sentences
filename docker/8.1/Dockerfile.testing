@@ -55,7 +55,7 @@ RUN apk update \
 RUN setcap "cap_net_bind_service=+ep" /usr/bin/php81
 
 # Container startup requirements
-COPY docker/8.1/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/8.1/supervisord.conf.testing /etc/supervisor/conf.d/supervisord.conf
 COPY docker/8.1/php.ini /etc/php81/conf.d/99-sail.ini
 
 COPY docker/8.1/start-container.testing /usr/local/bin/start-container.testing
