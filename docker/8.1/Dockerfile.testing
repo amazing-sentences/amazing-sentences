@@ -56,7 +56,7 @@ RUN setcap "cap_net_bind_service=+ep" /usr/bin/php81
 
 # Enable Xdebug for code coverage
 RUN rm /etc/php81/conf.d/50_xdebug.ini
-COPY 99_xdebug.ini /etc/php81/conf.d/
+COPY docker/8.1/99_xdebug.ini /etc/php81/conf.d/
 
 # Container startup requirements
 COPY docker/8.1/supervisord.conf.testing /etc/supervisor/conf.d/supervisord.conf
