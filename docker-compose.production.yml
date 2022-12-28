@@ -25,7 +25,6 @@ services:
         environment:
             WWWUSER: '${WWWUSER:-sail}'
             LARAVEL_SAIL: 1
-            XDEBUG_MODE: 'off'
             LARAVEL_ENV_ENCRYPTION_KEY: '${LARAVEL_ENV_ENCRYPTION_KEY:-}'
         volumes:
             - 'laravel-logs-production:/var/www/html/storage/logs'

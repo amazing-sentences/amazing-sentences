@@ -27,7 +27,6 @@ RUN apk update \
                 php81-soap \
                 php81-intl \
                 php81-ldap \
-                php81-xdebug \
                 # Alpine additional extensions
                 php81-phar \
                 php81-tokenizer \

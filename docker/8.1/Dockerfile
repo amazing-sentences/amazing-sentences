@@ -23,7 +23,6 @@ RUN apk update \
                 php81-soap \
                 php81-intl \
                 php81-ldap \
-                php81-xdebug \
                 # Alpine additional extensions
                 php81-phar \
                 php81-tokenizer \
@@ -36,6 +35,7 @@ RUN apk update \
                 # Extensions under pecl namespace (different from Ubuntu)
                 php81-pecl-msgpack \
                 php81-pecl-igbinary \
+                php81-pecl-xdebug \
                 # Custom Sail choices
                 php81-pecl-swoole \
                 php81-pgsql \
@@ -49,6 +49,10 @@ RUN apk update \
     && rm -rf /tmp/* /var/cache/apk/*
 
 RUN setcap "cap_net_bind_service=+ep" /usr/bin/php81
+
+# Enable Xdebug for code coverage
+RUN rm /etc/php81/conf.d/50_xdebug.ini
+COPY 99_xdebug.ini /etc/php81/conf.d/
 
 # Container startup requirements
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf

@@ -25,7 +25,6 @@ services:
         environment:
             WWWUSER: '${WWWUSER:-sail}'
             LARAVEL_SAIL: 1
-            XDEBUG_MODE: 'coverage'
         volumes:
             - 'laravel-logs-testing:/var/www/html/storage/logs'
         networks:
