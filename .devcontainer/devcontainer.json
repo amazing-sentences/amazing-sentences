@@ -1,0 +1,14 @@
+// https://aka.ms/devcontainer.json
+{
+	"name": "Existing Docker Compose (Extend)",
+	"dockerComposeFile": [
+		"../docker-compose.yml"
+	],
+	"service": "laravel",
+	"workspaceFolder": "/var/www/html",
+	"settings": {},
+	"extensions": [
+		"DEVSENSE.phptools-vscode"
+	],
+	"remoteUser": "sail"
+}

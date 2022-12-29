@@ -17,8 +17,8 @@ services:
             - laravel
     laravel:
         build:
-            context: ./docker/8.1
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./docker/8.1/Dockerfile
         image: jjrmanzano/amazing-sentences-laravel:local
         ports:
             - '8000:8000'
@@ -27,8 +27,6 @@ services:
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
             CHOKIDAR_USEPOLLING: true
-        volumes:
-            - '.:/var/www/html'
         networks:
             - sail
         depends_on:

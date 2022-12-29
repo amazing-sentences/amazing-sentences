@@ -11,6 +11,9 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apk update \
     && apk add  bash curl ca-certificates zip unzip git supervisor libcap libpng-dev \
+                # Dev Containers development
+                gnupg openssh-client \
+                # PHP
     && apk add  php81-cli \
                 php81-dev \
                 php81-gd \
@@ -52,13 +55,13 @@ RUN setcap "cap_net_bind_service=+ep" /usr/bin/php81
 
 # Enable Xdebug for code coverage
 RUN rm /etc/php81/conf.d/50_xdebug.ini
-COPY 99_xdebug.ini /etc/php81/conf.d/
+COPY docker/8.1/99_xdebug.ini /etc/php81/conf.d/
 
 # Container startup requirements
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY php.ini /etc/php81/conf.d/99-sail.ini
+COPY docker/8.1/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/8.1/php.ini /etc/php81/conf.d/99-sail.ini
 
-COPY start-container /usr/local/bin/start-container
+COPY docker/8.1/start-container /usr/local/bin/start-container
 RUN chmod +x /usr/local/bin/start-container
 
 RUN adduser --gecos "Sail" --ingroup www-data --disabled-password --shell /bin/bash --uid 1337 sail
@@ -67,6 +70,8 @@ RUN mkdir -p /var/log/supervisor && chmod -R o+rw /var/log/supervisor
 RUN mkdir -p /var/run && chmod -R o+rw /var/run
 RUN mkdir /.composer && chmod -R ugo+rw /.composer
 # End of Container startup requirements
+
+COPY --chown=sail:www-data . ./
 
 USER sail
 
