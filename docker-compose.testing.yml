@@ -29,6 +29,9 @@ services:
             - 'laravel-logs-testing:/var/www/html/storage/logs'
         networks:
             - sail
+        healthcheck:
+            test: ["CMD-SHELL", "wget -O /dev/null http://localhost:8000 || exit 1"]
+            timeout: 5s
         depends_on:
             - pgsql
             - redis

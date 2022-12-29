@@ -21,7 +21,6 @@ services:
         image: jjrmanzano/amazing-sentences-laravel:latest
         ports:
             - '8000:8000'
-            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
         environment:
             WWWUSER: '${WWWUSER:-sail}'
             LARAVEL_SAIL: 1
@@ -30,6 +29,9 @@ services:
             - 'laravel-logs-production:/var/www/html/storage/logs'
         networks:
             - sail
+        healthcheck:
+            test: ["CMD-SHELL", "wget -O /dev/null http://localhost:8000 || exit 1"]
+            timeout: 5s
         depends_on:
             - pgsql
             - redis
