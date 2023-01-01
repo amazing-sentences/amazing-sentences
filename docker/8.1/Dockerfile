@@ -35,6 +35,7 @@ RUN apk update \
                 php81-xmlwriter \
                 php81-posix \
                 php81-pdo \
+                php81-iconv \
                 # Extensions under pecl namespace (different from Ubuntu)
                 php81-pecl-msgpack \
                 php81-pecl-igbinary \
