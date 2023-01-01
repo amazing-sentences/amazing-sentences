@@ -4,12 +4,9 @@ LABEL maintainer="Jorge Juan Rodríguez Manzano"
 
 WORKDIR /var/www/html
 
-ARG NODE_ENV=production
-
 ENV DEBIAN_FRONTEND noninteractive
 ENV TZ=UTC
 ENV APP_ENV=production
-ENV NODE_ENV $NODE_ENV
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
@@ -92,8 +89,16 @@ RUN chown -R sail:www-data /var/www/html
 # Dependencies
 USER sail
 RUN composer install --no-dev --no-progress --no-interaction --optimize-autoloader
+
+# Frontend assets (vite build not available on production mode)
+ENV NODE_ENV development
 RUN npm ci
 RUN npm run build
+
+# Frontend dependencies
+RUN rm -rf node_modules
+ENV NODE_ENV production
+RUN npm ci
 
 EXPOSE 8000
 
