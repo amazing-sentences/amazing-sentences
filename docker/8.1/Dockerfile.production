@@ -95,11 +95,6 @@ ENV NODE_ENV development
 RUN npm ci
 RUN npm run build
 
-# Frontend dependencies
-RUN rm -rf node_modules
-ENV NODE_ENV production
-RUN npm ci
-
 EXPOSE 8000
 
 ENTRYPOINT ["start-container.production"]
