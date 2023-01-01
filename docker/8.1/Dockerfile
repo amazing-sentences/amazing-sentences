@@ -73,6 +73,7 @@ RUN mkdir /.composer && chmod -R ugo+rw /.composer
 # End of Container startup requirements
 
 COPY --chown=sail:www-data . ./
+RUN chown sail:www-data .
 
 USER sail
 
