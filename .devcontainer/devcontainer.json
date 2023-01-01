@@ -10,5 +10,6 @@
 	"extensions": [
 		"DEVSENSE.phptools-vscode"
 	],
-	"remoteUser": "sail"
+	"remoteUser": "sail",
+	"postCreateCommand": "git config gpg.program gpg2"
 }
