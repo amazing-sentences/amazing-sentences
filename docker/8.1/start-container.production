@@ -2,8 +2,8 @@
 cd /var/www/html
 
 php artisan env:decrypt --env=production --force
-
 php artisan storage:link
+php artisan migrate
 
 # Production optimizations
 php artisan optimize:clear
