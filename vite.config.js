@@ -22,6 +22,7 @@ export default defineConfig({
         noExternal: ['@inertiajs/server'],
     },
     server: {
+        https: process.env.NODE_ENV === 'production',
         hmr: {
             host: 'localhost',
         },
