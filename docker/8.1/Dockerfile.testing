@@ -99,6 +99,7 @@ RUN chown -R sail:www-data /var/www/html
 USER sail
 RUN composer install --no-progress --no-interaction
 RUN npm ci
+RUN npm run build
 
 EXPOSE 8000
 
