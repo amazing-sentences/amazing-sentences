@@ -8,6 +8,7 @@
         "php": "^8.0.2",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^0.6.3",
+        "laravel/fortify": "^1.14",
         "laravel/framework": "^9.19",
         "laravel/jetstream": "^2.13",
         "laravel/octane": "^1.3",

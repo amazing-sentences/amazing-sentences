@@ -27,6 +27,11 @@ RUN set -x ; \
 ARG PHP_UPSTREAM_CONTAINER=php-fpm
 ARG PHP_UPSTREAM_PORT=9000
 
+# Enable SSL certificate for local development
+COPY docker/nginx/self-signed-certificate.conf /etc/ssl/conf/
+RUN openssl req -batch -x509 -nodes -days 365 -newkey rsa:4096 -keyout /etc/ssl/private/localhost.key -out /etc/ssl/certs/localhost.crt -config /etc/ssl/conf/self-signed-certificate.conf
+RUN rm /etc/ssl/conf/self-signed-certificate.conf
+
 # Create 'messages' file used from 'logrotate'
 RUN touch /var/log/messages
 
@@ -39,11 +44,11 @@ RUN rm /etc/nginx/conf.d/default.conf
 # Enable Laravel Octane
 COPY docker/nginx/sites/octane.conf /etc/nginx/sites-available/
 
-# Copy static assets from public folder
-COPY public /var/www/html/public/
+# Enable Vite
+COPY docker/nginx/sites/vite.conf /etc/nginx/sites-available/
 
 ADD docker/nginx/startup.sh /opt/startup.sh
 RUN sed -i 's/\r//g' /opt/startup.sh
 CMD ["/bin/bash", "/opt/startup.sh"]
 
-EXPOSE 80 81 443
+EXPOSE 80 443 5174

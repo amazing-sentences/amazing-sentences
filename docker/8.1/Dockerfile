@@ -76,6 +76,8 @@ COPY --chown=sail:www-data . ./
 RUN chown sail:www-data .
 
 USER sail
+RUN composer install --no-progress --no-interaction
+RUN npm ci
 
 EXPOSE 8000
 
