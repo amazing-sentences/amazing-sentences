@@ -1,57 +1,20 @@
 version: '3'
 services:
-    nginx:
-        build:
-            context: .
-            dockerfile: ./docker/nginx/Dockerfile
-        image: jjrmanzano/amazing-sentences-nginx:testing
-        ports:
-            - '${APP_PORT:-80}:80'
-        networks:
-            - sail
-        healthcheck:
-            test: ["CMD-SHELL", "wget -O /dev/null http://localhost || exit 1"]
-            timeout: 10s
-        depends_on:
-            - laravel
-    laravel:
-        build:
-            context: .
-            dockerfile: ./docker/8.1/Dockerfile.testing
-        image: jjrmanzano/amazing-sentences-laravel:testing
-        ports:
-            - '8000:8000'
-            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
-        environment:
-            WWWUSER: '${WWWUSER:-sail}'
-            LARAVEL_SAIL: 1
-        volumes:
-            - 'laravel-logs-testing:/var/www/html/storage/logs'
-        networks:
-            - sail
-        healthcheck:
-            test: ["CMD-SHELL", "wget -O /dev/null http://localhost:8000 || exit 1"]
-            timeout: 5s
-        depends_on:
-            - pgsql
-            - redis
-            - meilisearch
-            - mailhog
     pgsql:
         image: 'postgres:14'
         ports:
             - '${FORWARD_DB_PORT:-5432}:5432'
         environment:
-            PGPASSWORD: '${DB_PASSWORD:-password}'
-            POSTGRES_DB: '${DB_DATABASE:-testing}'
-            POSTGRES_USER: '${DB_USERNAME:-sail}'
-            POSTGRES_PASSWORD: '${DB_PASSWORD:-password}'
+            PGPASSWORD: 'password'
+            POSTGRES_DB: 'testing'
+            POSTGRES_USER: 'sail'
+            POSTGRES_PASSWORD: 'password'
         volumes:
             - 'sail-pgsql-testing:/var/lib/postgresql/data'
         networks:
             - sail
         healthcheck:
-            test: ["CMD", "pg_isready", "-q", "-d", "${DB_DATABASE:-testing}", "-U", "${DB_USERNAME:-sail}"]
+            test: ["CMD", "pg_isready", "-q", "-d", "testing", "-U", "sail"]
             retries: 3
             timeout: 5s
     redis:
@@ -89,6 +52,45 @@ services:
             - '${FORWARD_MAILHOG_DASHBOARD_PORT:-8025}:8025'
         networks:
             - sail
+    laravel:
+        build:
+            context: .
+            dockerfile: ./docker/8.1/Dockerfile.testing
+        image: jjrmanzano/amazing-sentences-laravel:testing
+        ports:
+            - '8000:8000'
+        environment:
+            WWWUSER: '${WWWUSER:-sail}'
+            LARAVEL_SAIL: 1
+        volumes:
+            - 'laravel-logs-testing:/var/www/html/storage/logs'
+        networks:
+            - sail
+        healthcheck:
+            test: ["CMD-SHELL", "wget -O /dev/null http://localhost:8000 || exit 1"]
+            timeout: 5s
+        depends_on:
+            - pgsql
+            - redis
+            - meilisearch
+            - mailhog
+        restart: on-failure
+    nginx:
+        build:
+            context: .
+            dockerfile: ./docker/nginx/Dockerfile
+        image: jjrmanzano/amazing-sentences-nginx:testing
+        ports:
+            - '${APP_PORT:-80}:80'
+            - '443:443'
+        networks:
+            - sail
+        healthcheck:
+            test: ["CMD-SHELL", "wget -O /dev/null http://localhost || exit 1"]
+            timeout: 10s
+        depends_on:
+            - laravel
+        restart: on-failure
 networks:
     sail:
         driver: bridge
