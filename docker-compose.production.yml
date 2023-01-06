@@ -63,13 +63,12 @@ services:
     nginx:
         build:
             context: .
-            dockerfile: ./docker/nginx/Dockerfile
+            dockerfile: ./docker/nginx/Dockerfile.production
         image: jjrmanzano/amazing-sentences-nginx:latest
         ports:
             - '80:80'
-            - '443:443'
         healthcheck:
-            test: ["CMD-SHELL", "wget -O /dev/null --no-check-certificate http://localhost || exit 1"]
+            test: ["CMD-SHELL", "wget -O /dev/null http://localhost || exit 1"]
             timeout: 10s
         depends_on:
             - laravel
