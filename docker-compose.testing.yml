@@ -86,7 +86,7 @@ services:
         networks:
             - sail
         healthcheck:
-            test: ["CMD-SHELL", "wget -O /dev/null http://localhost || exit 1"]
+            test: ["CMD-SHELL", "wget -O /dev/null --no-check-certificate http://localhost || exit 1"]
             timeout: 10s
         depends_on:
             - laravel
