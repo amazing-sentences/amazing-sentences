@@ -51,4 +51,21 @@ class RegistrationTest extends TestCase
         $this->assertAuthenticated();
         $response->assertRedirect(RouteServiceProvider::HOME);
     }
+
+    public function test_new_users_cannot_register_with_a_restricted_domain()
+    {
+        if (! Features::enabled(Features::registration())) {
+            return $this->markTestSkipped('Registration support is not enabled.');
+        }
+
+        $response = $this->post('/register', [
+            'name' => 'Test User',
+            'email' => 'test@amazing-sentences.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
+        ]);
+
+        $response->assertSessionHasErrors(['email' => 'The email must not belong to a restricted domain.']);
+    }
 }
