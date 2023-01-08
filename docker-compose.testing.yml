@@ -68,7 +68,7 @@ services:
             - sail
         healthcheck:
             test: ["CMD-SHELL", "wget -O /dev/null http://localhost:8000 || exit 1"]
-            timeout: 5s
+            timeout: 30s
         depends_on:
             - pgsql
             - redis
@@ -88,7 +88,7 @@ services:
             - sail
         healthcheck:
             test: ["CMD-SHELL", "wget -O /dev/null --no-check-certificate http://localhost || exit 1"]
-            timeout: 10s
+            timeout: 30s
         depends_on:
             - laravel
         restart: on-failure
