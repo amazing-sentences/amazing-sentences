@@ -52,7 +52,7 @@ COPY docker/wait-for-it.sh /usr/local/bin/wait-for-it.sh
 RUN chmod +x /usr/local/bin/wait-for-it.sh
 
 COPY docker/nginx/startup.sh /usr/local/bin/startup.sh
-RUN RUN chmod +x /usr/local/bin/startup.sh
+RUN chmod +x /usr/local/bin/startup.sh
 RUN sed -i 's/\r//g' /usr/local/bin/startup.sh
 CMD ["/bin/bash", "startup.sh"]
 
