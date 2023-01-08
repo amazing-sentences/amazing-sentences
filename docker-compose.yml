@@ -95,7 +95,7 @@ services:
         depends_on:
             - laravel
         restart: on-failure
-        command: ["wait-for-it.sh", "laravel:8000", "--strict", "--", "/opt/startup.sh"]
+        command: ["wait-for-it.sh", "laravel:8000", "--strict", "--", "startup.sh"]
 
 networks:
     sail:

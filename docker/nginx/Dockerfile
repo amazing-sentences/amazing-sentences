@@ -48,11 +48,12 @@ COPY docker/nginx/sites/octane.conf /etc/nginx/sites-available/
 COPY docker/nginx/sites/vite.conf /etc/nginx/sites-available/
 
 # Add wait-for-it to wait for backend to be ready
-COPY docker/wait-for-it.sh /usr/bin/wait-for-it.sh 
-RUN chmod +x /usr/bin/wait-for-it.sh
+COPY docker/wait-for-it.sh /usr/local/bin/wait-for-it.sh 
+RUN chmod +x /usr/local/bin/wait-for-it.sh
 
-ADD docker/nginx/startup.sh /opt/startup.sh
-RUN sed -i 's/\r//g' /opt/startup.sh
-CMD ["/bin/bash", "/opt/startup.sh"]
+COPY docker/nginx/startup.sh /usr/local/bin/startup.sh
+RUN RUN chmod +x /usr/local/bin/startup.sh
+RUN sed -i 's/\r//g' /usr/local/bin/startup.sh
+CMD ["/bin/bash", "startup.sh"]
 
 EXPOSE 80 443 5174
