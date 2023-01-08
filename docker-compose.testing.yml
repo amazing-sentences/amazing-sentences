@@ -75,6 +75,7 @@ services:
             - meilisearch
             - mailhog
         restart: on-failure
+        command: ["wait-for-it.sh", "pgsql:5432", "--strict", "--", "start-container.testing"]
     nginx:
         build:
             context: .
@@ -91,6 +92,7 @@ services:
         depends_on:
             - laravel
         restart: on-failure
+        command: ["wait-for-it.sh", "laravel:8000", "--strict", "--", "/opt/startup.sh"]
 networks:
     sail:
         driver: bridge

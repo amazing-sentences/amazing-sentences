@@ -99,12 +99,16 @@ COPY phpunit.xml ./
 RUN chown -R sail:www-data /var/www/html
 # End of manual copy for Laravel project files.
 
+# Add wait-for-it to wait for database to be ready
+COPY docker/wait-for-it.sh /usr/local/bin/wait-for-it.sh 
+RUN chmod +x /usr/local/bin/wait-for-it.sh
+
 # Dependencies
 USER sail
 RUN composer install --no-progress --no-interaction
 RUN npm ci
 RUN npm run build
 
-EXPOSE 8000
+CMD ["/bin/bash", "start-container.testing"]
 
-ENTRYPOINT ["start-container.testing"]
+EXPOSE 8000

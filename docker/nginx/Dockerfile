@@ -47,6 +47,10 @@ COPY docker/nginx/sites/octane.conf /etc/nginx/sites-available/
 # Enable Vite
 COPY docker/nginx/sites/vite.conf /etc/nginx/sites-available/
 
+# Add wait-for-it to wait for backend to be ready
+COPY docker/wait-for-it.sh /usr/bin/wait-for-it.sh 
+RUN chmod +x /usr/bin/wait-for-it.sh
+
 ADD docker/nginx/startup.sh /opt/startup.sh
 RUN sed -i 's/\r//g' /opt/startup.sh
 CMD ["/bin/bash", "/opt/startup.sh"]

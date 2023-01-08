@@ -75,10 +75,14 @@ RUN mkdir /.composer && chmod -R ugo+rw /.composer
 COPY --chown=sail:www-data . ./
 RUN chown sail:www-data .
 
+# Add wait-for-it to wait for database to be ready
+COPY docker/wait-for-it.sh /usr/local/bin/wait-for-it.sh 
+RUN chmod +x /usr/local/bin/wait-for-it.sh
+
 USER sail
 RUN composer install --no-progress --no-interaction
 RUN npm ci
 
 EXPOSE 8000
 
-ENTRYPOINT ["start-container"]
+CMD ["/bin/bash", "start-container"]

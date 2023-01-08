@@ -60,6 +60,7 @@ services:
             - redis
             - meilisearch
         restart: on-failure
+        command: ["wait-for-it.sh", "pgsql:5432", "--strict", "--", "start-container.production"]
     nginx:
         build:
             context: .
@@ -73,6 +74,7 @@ services:
         depends_on:
             - laravel
         restart: on-failure
+        command: ["wait-for-it.sh", "laravel:8000", "--strict", "--", "/opt/startup.sh"]
 volumes:
     laravel-logs-production:
         driver: local
