@@ -87,6 +87,14 @@ COPY .env.production.encrypted ./
 RUN chown -R sail:www-data /var/www/html
 # End of manual copy for Laravel project files.
 
+# Azure Web App mounts App Service Plan Persistent Storage into /home
+# (requires WEBSITES_ENABLE_APP_SERVICE_STORAGE = true)
+# https://learn.microsoft.com/en-us/azure/app-service/configure-custom-container?pivots=container-linux&tabs=debian#use-persistent-shared-storage
+RUN mkdir -p /home/laravel \
+    && chown -R sail:www-data /home/laravel \
+    && mv /var/www/html/storage /home/laravel/ \
+    && ln -sf /home/laravel/storage /var/www/html/
+
 # Add wait-for-it to wait for database to be ready
 COPY docker/wait-for-it.sh /usr/local/bin/wait-for-it.sh 
 RUN chmod +x /usr/local/bin/wait-for-it.sh

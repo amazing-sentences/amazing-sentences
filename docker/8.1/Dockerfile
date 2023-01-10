@@ -75,6 +75,14 @@ RUN mkdir /.composer && chmod -R ugo+rw /.composer
 COPY --chown=sail:www-data . ./
 RUN chown sail:www-data .
 
+# Azure Web App mounts App Service Plan Persistent Storage into /home
+# (requires WEBSITES_ENABLE_APP_SERVICE_STORAGE = true)
+# https://learn.microsoft.com/en-us/azure/app-service/configure-custom-container?pivots=container-linux&tabs=debian#use-persistent-shared-storage
+RUN mkdir -p /home/laravel \
+    && chown -R sail:www-data /home/laravel \
+    && mv /var/www/html/storage /home/laravel/ \
+    && ln -sf /home/laravel/storage /var/www/html/
+
 # Add wait-for-it to wait for database to be ready
 COPY docker/wait-for-it.sh /usr/local/bin/wait-for-it.sh 
 RUN chmod +x /usr/local/bin/wait-for-it.sh
