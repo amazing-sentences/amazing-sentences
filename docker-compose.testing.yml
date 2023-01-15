@@ -9,8 +9,9 @@ services:
             POSTGRES_DB: 'testing'
             POSTGRES_USER: 'sail'
             POSTGRES_PASSWORD: 'password'
+            PGDATA: '/home/pgsql/data'
         volumes:
-            - 'sail-pgsql-testing:/var/lib/postgresql/data'
+            - 'sail-pgsql-testing:/home/pgsql/data'
         networks:
             - sail
         healthcheck:
